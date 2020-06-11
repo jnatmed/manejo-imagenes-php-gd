@@ -50,14 +50,16 @@ class ImgController{
                            $this->getAltoImg(),  // alto imagen destino
                            $ancho_img, // ancho imagen original
                            $alto_img ); // alto imagen original
+        $img_format_jpeg = $img_redimencionada;
+        // ob_start();
+        // imagejpeg($img_redimencionada, NULL, 100);
+        // imageDestroy($img_redimencionada);
+        // $img_resultado = ob_get_clean();
+        // var_dump($img_format_jpeg);
+        // $img_resultado = base64_encode($img_resultado);
 
-        ob_start();
-        imagejpeg($img_redimencionada, NULL, 100);
-        imageDestroy($img_redimencionada);
-        $img_resultado = ob_get_clean();
-        $img_resultado = base64_encode($img_resultado);
-
-        return array('original' => $img, 'resultado' => $img_resultado);
+        // return array('original' => $img, 'formato_base64' => $img_resultado, 'formato_jpeg' => $img_format_jpeg);
+        return array('formato_jpeg' => $img_format_jpeg);
     }
     
     
@@ -73,16 +75,22 @@ class ImgController{
         // $tipo = $infoImg
     }
     
-    public function recortar($img, $coorx, $coory){
+    public function recortar($img, $coorx, $coory,$imgJPEG=NULL){
         
         // echo("<pre>");
         // var_dump($img);
+        // if(!(is_null($imgJPEG))){
+        //     $img_a_recortar = imagejpeg($imgJPEG);    
+        // }else{
+        //     $img_a_recortar = imagecreatefromjpeg($img);
+        // }
 
-        $imgRecortada = imagecrop(imagecreatefromjpeg($img), 
-                                        ['x' => $coorx, 
-                                         'y' => $coory, 
-                                         'width' => 210, 
-                                         'height' => 210]);
+        // var_dump($img_a_recortar);    
+        $imgRecortada = imagecrop($imgJPEG, 
+                                  ['x' => $coorx, 
+                                   'y' => $coory, 
+                                   'width' => 210, 
+                                   'height' => 210]);
         ob_start();
         imagejpeg($imgRecortada, NULL, 100);
         imageDestroy($imgRecortada);
