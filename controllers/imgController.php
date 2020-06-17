@@ -6,10 +6,12 @@ use GD;
 class ImgController{
     public $ancho;
     public $alto;
+    public $tamanio_pieza;
 
     public function __construct($dimensiones){
         $this->ancho = $dimensiones['ANCHO'];
         $this->alto = $dimensiones['ALTO'];
+        $this->tamanio_pieza = $dimensiones['TAMANIO_PIEZA'];
     }
 
     /**
@@ -22,8 +24,7 @@ class ImgController{
         $infoImg = getimagesize($img);
         $ancho_img = $infoImg[0];
         $alto_img = $infoImg[1];
-        // echo("<pre>");
-        // var_dump($infoImg['mime']);
+
         list($a, $solo_tipo) = explode("/",$infoImg['mime']);
         /**
          * aca obtengo el tipo [jpeg, jpg, png]
@@ -36,10 +37,7 @@ class ImgController{
          *                    $original_height)
          */
         $img_redimencionada = ImageCreateTrueColor($this->getAnchoImg(), $this->getAltoImg());
-        // var_dump($img_resultado);
-        // imagecolortransparent($img_resultado, imagecolorallocate($img_resultado,0,0,0));
-        
-        // $img_resultado = $img;
+
         imagecopyresampled($img_redimencionada, // imagen destino
                            imagecreatefromjpeg($img), // imagen original 
                            0, // coord x inicio imagen destino 
@@ -51,14 +49,7 @@ class ImgController{
                            $ancho_img, // ancho imagen original
                            $alto_img ); // alto imagen original
         $img_format_jpeg = $img_redimencionada;
-        // ob_start();
-        // imagejpeg($img_redimencionada, NULL, 100);
-        // imageDestroy($img_redimencionada);
-        // $img_resultado = ob_get_clean();
-        // var_dump($img_format_jpeg);
-        // $img_resultado = base64_encode($img_resultado);
 
-        // return array('original' => $img, 'formato_base64' => $img_resultado, 'formato_jpeg' => $img_format_jpeg);
         return array('formato_jpeg' => $img_format_jpeg);
     }
     
@@ -70,27 +61,21 @@ class ImgController{
         return $this->ancho;
     }
     
+    public function getTamanioPieza(){
+        return $this->tamanio_pieza;
+    }
+
     public function tipoImg($img){
         $infoImg = getimagesize($img);
-        // $tipo = $infoImg
     }
     
     public function recortar($img, $coorx, $coory,$imgJPEG=NULL){
-        
-        // echo("<pre>");
-        // var_dump($img);
-        // if(!(is_null($imgJPEG))){
-        //     $img_a_recortar = imagejpeg($imgJPEG);    
-        // }else{
-        //     $img_a_recortar = imagecreatefromjpeg($img);
-        // }
-
-        // var_dump($img_a_recortar);    
+            
         $imgRecortada = imagecrop($imgJPEG, 
                                   ['x' => $coorx, 
                                    'y' => $coory, 
-                                   'width' => 210, 
-                                   'height' => 210]);
+                                   'width' => $this->getTamanioPieza(), 
+                                   'height' => $this->getTamanioPieza()]);
         ob_start();
         imagejpeg($imgRecortada, NULL, 100);
         imageDestroy($imgRecortada);

@@ -1,0 +1,17 @@
+.piezas{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;  
+}
+canvas {
+	width:450px;
+	height:450px;
+    border: 5px solid black;
+    margin:auto
+}
+
+#puzz1, #puzz2, #puzz3, #puzz3, #puzz4,
+#puzz5, #puzz6, #puzz7, #puzz8, #puzz9{
+    width: 150px;
+    height: 150px;
+}
